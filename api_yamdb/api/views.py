@@ -1,8 +1,8 @@
 from rest_framework import mixins, viewsets
 
-from reviews.models import Categories, Genres, Titles
-from .serializers import CategoriesSerializer, GenresSerializer
-from .serializers import TitlesSerializer
+from reviews.models import Category, Genre, Title
+from .serializers import CategorySerializer, GenreSerializer
+from .serializers import TitleSerializer
 
 
 class CreateListDestroyViewSet(
@@ -15,15 +15,15 @@ class CreateListDestroyViewSet(
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Titles.objects.all()
-    serializer_class = TitlesSerializer
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
 
 
-class GenresViewSet(CreateListDestroyViewSet):
-    queryset = Genres.objects.all()
-    serializer_class = GenresSerializer
+class GenreViewSet(CreateListDestroyViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
 
 
-class CategoriesViewSet(CreateListDestroyViewSet):
-    queryset = Categories.objects.all()
-    serializer_class = CategoriesSerializer
+class CategoryViewSet(CreateListDestroyViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
