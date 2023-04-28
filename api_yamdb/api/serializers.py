@@ -5,7 +5,49 @@ from rest_framework import serializers
 from reviews.models import Category, Genre, Title
 
 
-class TitleSerializer(serializers.ModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        exclude = ['id']
+        model = Genre
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        exclude = ['id']
+        model = Category
+
+
+class TitleListSerializer(serializers.ModelSerializer):
+    genre = CategorySerializer(
+        read_only=True,
+        many=True,
+    )
+    category = GenreSerializer(
+        read_only=True,
+    )
+    rating = serializers.IntegerField(
+        read_only=True,
+    )
+
+    class Meta:
+        fields = [
+            'id', 'name', 'year', 'description', 'genre', 'category', 'rating'
+        ]
+        model = Title
+
+
+class TitleCreateSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Genre.objects.all(),
+        many=True,
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all(),
+    )
 
     class Meta:
         fields = '__all__'
@@ -18,17 +60,3 @@ class TitleSerializer(serializers.ModelSerializer):
                 'Год выпуска не может быть больше текущего.'
             )
         return value
-
-
-class GenreSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = '__all__'
-        model = Genre
-
-
-class CategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = '__all__'
-        model = Category
