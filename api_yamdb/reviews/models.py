@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Genre(models.Model):
@@ -57,8 +60,8 @@ class Title(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        null=True,
         on_delete=models.SET_NULL,
+        null=True,
         related_name='titles',
         verbose_name='Категория',
     )
@@ -66,6 +69,29 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+
+    def __str__(self):
+        return self.name
+
+
+class Review(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews')
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name='Произведение',
+    )
+    score = models.IntegerField(null=True)
+    text = models.TextField()
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
     def __str__(self):
         return self.name

@@ -1,5 +1,6 @@
 from rest_framework import filters, mixins, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Avg
 
 from reviews.models import Category, Genre, Title
 from .serializers import CategorySerializer, GenreSerializer
@@ -17,10 +18,14 @@ class CreateListDestroyViewSet(
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('name', 'year',)
     filterset_class = TitleFilter
+    filterset_fields = ('name', 'year',)
+
+    def get_queryset(self):
+        return Title.objects.all().annotate(
+            rating=Avg('reviews__score')
+        )
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
