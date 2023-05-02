@@ -1,18 +1,6 @@
 from rest_framework import permissions
 
 
-class IsAdminOrReadOnlyPermission(permissions.BasePermission):
-    """Пользовательское разрешение, позволяющее выполнять
-    действия только администратору или если это безопасный метод"""
-
-    def has_permission(self, request, view):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or request.user.is_authenticated
-            and request.user.is_admin
-        )
-
-
 class AuthorOrModerOrAdmin(permissions.BasePermission):
     """Пользовательское разрешение, позволяющее выполнять действия,
     если ваша роль соответствует следующим: автор, модератор или Вы
@@ -28,7 +16,7 @@ class AuthorOrModerOrAdmin(permissions.BasePermission):
                 or obj.author == request.user)
 
 
-class OnlyAdmin(permissions.BasePermission):
+class OnlyAdmin(permissions.IsAdminUser):
     """Пользовательское разрешение, позволяющее выполнять действия
     только администратору"""
 
