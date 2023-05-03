@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 
 from rest_framework.response import Response
 
-from users.models import User
+from reviews.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

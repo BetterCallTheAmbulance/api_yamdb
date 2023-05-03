@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .permissions import IsAdminOrReadOnlyPermission
 
-from users.models import User
+from reviews.models import User
 
 
 class CreateListDestroyViewSet(
