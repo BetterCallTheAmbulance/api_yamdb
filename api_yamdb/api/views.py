@@ -13,9 +13,9 @@ from .serializers import (UserSerializer, SignUpSerializer,
 
 from .utils import generate_confirmation_code_and_send_email
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from .permissions import (IsAdminOrReadOnlyPermission, OnlyAdmin)
+from .permissions import IsAdminOrReadOnlyPermission
 
 from users.models import User
 
@@ -100,7 +100,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     http_method_names = ('get', 'post', 'patch', 'delete')
-    permission_classes = (OnlyAdmin,)
+    permission_classes = (IsAdminUser,)
     filter_backends = (filters.SearchFilter, )
     search_fields = ('=username', )
     lookup_field = 'username'
