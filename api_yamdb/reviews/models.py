@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    """Модель пользователя."""
     USER = 'user'
     MODERATOR = 'moderator'
     ADMIN = 'admin'
@@ -49,6 +48,8 @@ class User(AbstractUser):
             models.UniqueConstraint(fields=('username', 'email'),
                                     name='unique_username&email')
         ]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
@@ -158,3 +159,24 @@ class Review(models.Model):
     def __str__(self):
         return self.name
 
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments')
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Отзыв'
+    )
+    text = models.TextField()
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text

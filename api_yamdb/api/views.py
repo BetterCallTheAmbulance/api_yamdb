@@ -8,12 +8,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg
 
 from .serializers import (UserSerializer, SignUpSerializer,
-                          JWTTokenSerializer,  ResponseSerializer)
-from .serializers import CategorySerializer, GenreSerializer  
-from .serializers import TitleListSerializer, TitleCreateSerializer
+                          JWTTokenSerializer, CategorySerializer,
+                          GenreSerializer, TitleListSerializer,
+                          TitleCreateSerializer, CommentSerializer,
+                          ReviewSerializer,)
 from .utils import generate_confirmation_code_and_send_email
 from .permissions import IsAdminOrReadOnlyPermission
-from reviews.models import Category, Genre, Title, User
+from reviews.models import Category, Comment, Genre, Review, Title, User
 from .filters import TitleFilter
 
 
@@ -31,7 +32,7 @@ def signup_function(request):
     """Функция для регистрации нового пользователя"""
 
     data = request.data
-    resp_ser = ResponseSerializer(data=data)
+    resp_ser = SignUpSerializer(data=data)
     resp_ser.is_valid(raise_exception=True)
     username = resp_ser.validated_data['username']
     if not User.objects.filter(username=username).exists():
@@ -115,9 +116,9 @@ class GetPostPatchDeleteViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnlyPermission,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
-    filterset_fields = ('name', 'year',)
 
     def get_queryset(self):
         return Title.objects.all().annotate(
@@ -133,6 +134,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class GenreViewSet(CreateListDestroyViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrReadOnlyPermission,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
@@ -141,6 +143,17 @@ class GenreViewSet(CreateListDestroyViewSet):
 class CategoryViewSet(CreateListDestroyViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (IsAdminOrReadOnlyPermission,)
     lookup_field = 'slug'
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

@@ -12,7 +12,15 @@ class TitleFilter(filters.FilterSet):
         field_name='genre__slug',
         lookup_expr='iexact',
     )
+    name = filters.CharFilter(
+        field_name='name',
+        lookup_expr='iexact',
+    )
+    year = filters.CharFilter(
+        field_name='year',
+        lookup_expr='iexact',
+    )
 
     class Meta():
         model = Title
-        fields = ['category', 'genre']
+        fields = ['category', 'genre', 'name', 'year']
