@@ -4,7 +4,7 @@ from rest_framework import serializers, status
 from django.core.validators import RegexValidator
 from rest_framework.response import Response
 
-from reviews.models import Category, Genre, Title, User
+from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         elif value.lower() == 'me':
             raise serializers.ValidationError(
                 'Нельзя использовать Юзернейм - "me"'
-                )
+            )
         return value
 
     class Meta:
@@ -53,6 +53,10 @@ class SignUpSerializer(serializers.ModelSerializer):
 class JWTTokenSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
     confirmation_code = serializers.CharField(max_length=50)
+
+    class Meta:
+        model = User
+        fields = ('username', 'confirmation_code')
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -110,3 +114,17 @@ class TitleCreateSerializer(serializers.ModelSerializer):
                 'Год выпуска не может быть больше текущего.'
             )
         return value
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = Review
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = Comment

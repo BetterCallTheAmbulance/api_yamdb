@@ -8,9 +8,9 @@ from reviews.models import Category, Comment, Genre, Title, Review, User
 
 MODELS_DATA = {
     User: 'users.csv',
-    Title: 'titles.csv',
     Category: 'category.csv',
     Genre: 'genre.csv',
+    Title: 'titles.csv',
     Review: 'review.csv',
     Comment: 'comments.csv',
 }
