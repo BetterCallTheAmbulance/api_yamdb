@@ -3,7 +3,7 @@ from rest_framework import status, viewsets, filters, mixins
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg
 
@@ -13,7 +13,8 @@ from .serializers import (UserSerializer, SignUpSerializer,
                           TitleCreateSerializer, CommentSerializer,
                           ReviewSerializer,)
 from .utils import generate_confirmation_code_and_send_email
-from .permissions import IsAdminOrReadOnlyPermission
+from .permissions import (IsAdminOrReadOnlyPermission,
+                          IsAuthorAdminModeratorOrReadOnly)
 from reviews.models import Category, Comment, Genre, Review, Title, User
 from .filters import TitleFilter
 
@@ -150,10 +151,56 @@ class CategoryViewSet(CreateListDestroyViewSet):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели Review. """
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthorAdminModeratorOrReadOnly]
+
+    def get_title(self):
+        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+
+    def perform_create(self, serializer):
+        serializer.save(
+            author=self.request.user,
+            title=self.get_title()
+        )
+
+    def get_queryset(self):
+        return Review.objects.filter(title=self.get_title())
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [AllowAny, ]
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAuthenticated, ]
+        else:
+            self.permission_classes = [IsAuthorAdminModeratorOrReadOnly, ]
+        return super(ReviewViewSet, self).get_permissions()
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели Comment. """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = []
+
+    def get_review(self):
+        return get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+
+    def get_queryset(self):
+        return Comment.objects.filter(review=self.get_review())
+
+    def perform_create(self, serializer):
+        serializer.save(
+            author=self.request.user,
+            review=self.get_review()
+        )
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [AllowAny, ]
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAuthenticated, ]
+        else:
+            self.permission_classes = [IsAuthorAdminModeratorOrReadOnly, ]
+        return super(CommentViewSet, self).get_permissions()
