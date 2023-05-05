@@ -86,11 +86,11 @@ python3 manage.py runserver
 }
 ```
 ### Запрос на получение списка отзывов к произведению (GET):
-'''
+```
 /api/v1/titles/{title_id}/reviews/
-'''
+```
 **Пример ответа:**
-'''
+```
 {
   "count": 0,
   "next": "string",
@@ -105,24 +105,24 @@ python3 manage.py runserver
     }
   ]
 }
-'''
+```
 ### Запрос на добавление отзыва к произведению (POST):
-'''
+```
 /api/v1/titles/{title_id}/reviews/
-'''
+```
 **Пример ответа:**
-'''
+```
 {
   "text": "string",
   "score": 1
 }
-'''
+```
 ### Запрос на получение списка всех комментариев к отзыву (GET):
-'''
+```
 /api/v1/titles/{title_id}/reviews/{review_id}/comments/
-'''
+```
 **Пример ответа:**
-'''
+```
 {
   "count": 0,
   "next": "string",
@@ -136,9 +136,9 @@ python3 manage.py runserver
     }
   ]
 }
-'''
+```
 ### Запрос на удаление комментария к отзыву (DELETE):
-'''
+```
 /api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
-'''
+```
 ***Авторы:***
