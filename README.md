@@ -142,3 +142,6 @@ python3 manage.py runserver
 /api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
 ```
 ***Авторы:***
+[Платон Попов](https://github.com/BetterCallTheAmbulance)
+[Элина Мустафаева](https://github.com/Elllym-em)
+[Кирилл Бовин](https://github.com/Kirill-Bovin/)
