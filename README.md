@@ -85,5 +85,60 @@ python3 manage.py runserver
   "slug": "string"
 }
 ```
-
+### Запрос на получение списка отзывов к произведению (GET):
+'''
+/api/v1/titles/{title_id}/reviews/
+'''
+**Пример ответа:**
+'''
+{
+  "count": 0,
+  "next": "string",
+  "previous": "string",
+  "results": [
+    {
+      "id": 0,
+      "text": "string",
+      "author": "string",
+      "score": 1,
+      "pub_date": "2019-08-24T14:15:22Z"
+    }
+  ]
+}
+'''
+### Запрос на добавление отзыва к произведению (POST):
+'''
+/api/v1/titles/{title_id}/reviews/
+'''
+**Пример ответа:**
+'''
+{
+  "text": "string",
+  "score": 1
+}
+'''
+### Запрос на получение списка всех комментариев к отзыву (GET):
+'''
+/api/v1/titles/{title_id}/reviews/{review_id}/comments/
+'''
+**Пример ответа:**
+'''
+{
+  "count": 0,
+  "next": "string",
+  "previous": "string",
+  "results": [
+    {
+      "id": 0,
+      "text": "string",
+      "author": "string",
+      "pub_date": "2019-08-24T14:15:22Z"
+    }
+  ]
+}
+'''
+### Запрос на удаление комментария к отзыву (DELETE):
+'''
+/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
+'''
 ***Авторы:***
